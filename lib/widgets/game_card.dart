@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../models/team.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GameCard extends StatelessWidget {
-  final String homeTeam;
-  final String awayTeam;
+  final Team homeTeam;
+  final Team awayTeam;
   final String time;
 
   const GameCard({
@@ -21,20 +23,53 @@ class GameCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _teamRow(awayTeam),
             Text(
-              '$homeTeam vs $awayTeam', 
-              style: const TextStyle(
-                fontSize: 16, 
-                fontWeight: FontWeight.bold
-              ),
-            ),
-            Text(
-              time, 
+              time,
               style: const TextStyle(color: Colors.grey),
             ),
+            _teamRow(homeTeam),
           ],
         ),
       ),
     );
+  }
+
+  Widget _teamRow(Team team) {
+    return Row(
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: team.primaryColor,
+            shape: BoxShape.circle,
+          ),
+        ),
+        _teamLogo(team),
+        const SizedBox(width: 8),
+        Text(
+          team.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _teamLogo(Team team) {
+    switch (team.logoType) {
+      case LogoType.png:
+        return Image.asset(
+          team.logoPath,
+          width: 32,
+          height: 32,
+        );
+      case LogoType.svg:
+        return SvgPicture.asset(
+          team.logoPath,
+          width: 32,
+          height: 32,
+        );
+    }
   }
 }
